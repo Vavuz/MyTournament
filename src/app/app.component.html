@@ -1,26 +1,28 @@
-<body>
-  <!-- Header -->
-  <h1>My Tournament</h1>
+<!-- Header -->
+<h1>My Tournament</h1>
 
-  <!-- Content -->
-  <div class="content">
-    <div class="challenge">
-      <app-image [imageUrl]="imageUrl"/>
-      <app-image [imageUrl]="imageUrl"/>
-    </div>
+<!-- Content -->
+<div class="content">
+  <div class="home" *ngIf="!gameStarted">
+    <p>Welcome, type something, choos a number and press play</p>
+    <button mat-flat-button color="primary" (click)="startGame()">Basic</button>
   </div>
+  <div class="challenge" *ngIf="gameStarted">
+    <app-image [imageUrl]="leftImageUrl"/>
+    <app-image [imageUrl]="rightImageUrl"/>
+  </div>
+</div>
 
-  <!-- Footer -->
-  <div class="footer">
-    <div class="footer-text">
-        <p>© 2025 Vavuz. All rights reserved.</p>
-        <p>Designed & Developed by Vavuz</p>
-    </div>
-    <div class="footer-links">
-        <a href="https://www.pexels.com">Photos provided by</a>
-        <a href="https://www.pexels.com">
-            <img src="https://images.pexels.com/lib/api/pexels-white.png" class="pexels"/>
-        </a>
-    </div>
+<!-- Footer -->
+<div class="footer">
+  <div class="footer-text">
+      <p>© 2025 Vavuz. All rights reserved.</p>
+      <p>Designed & Developed by Vavuz</p>
   </div>
-</body>
+  <div class="footer-links">
+      <a href="https://www.pexels.com">Photos provided by</a>
+      <a href="https://www.pexels.com">
+          <img src="https://images.pexels.com/lib/api/pexels-white.png" class="pexels"/>
+      </a>
+  </div>
+</div>
