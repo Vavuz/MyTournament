@@ -1,7 +1,12 @@
 img {
     width: 25rem;
+    border-radius: 5%;
+    border: 5px solid black;
+    transition: width 0.3s ease-in-out, border-color 0.3s ease-in-out;
+
     &:hover {
         width: 26rem;
-    }
+        border-color: rgb(177, 45, 45);
+        box-shadow: 0px 0px 5px #fff;
+    }    
 }
-
