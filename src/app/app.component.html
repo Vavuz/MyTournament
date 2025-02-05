@@ -1,15 +1,17 @@
 <!-- Header -->
-<h1>My Tournament</h1>
+<h1 (click)="goToHome()">My Tournament</h1>
+
+<div id="tsparticles"></div>
 
 <!-- Content -->
 <div class="content">
   <div class="home" *ngIf="!gameStarted">
-    <p>Welcome, type something, choos a number and press play</p>
-    <button mat-flat-button color="primary" (click)="startGame()">Basic</button>
+    <p>Welcome to MyTournament! Type in the contenders' category and press Play!</p>
+    <button mat-flat-button color="primary" (click)="startGame()">Play</button>
   </div>
   <div class="challenge" *ngIf="gameStarted">
-    <app-image [imageUrl]="leftImageUrl"/>
-    <app-image [imageUrl]="rightImageUrl"/>
+    <app-image [imageUrl]="leftImageUrl" (click)="shootConfetti($event)"></app-image>
+    <app-image [imageUrl]="rightImageUrl" (click)="shootConfetti($event)"></app-image>    
   </div>
 </div>
 
