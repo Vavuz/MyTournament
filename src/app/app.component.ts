@@ -7,11 +7,12 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
 import { tsParticles, Engine } from "tsparticles-engine";
 import { loadConfettiPreset } from "tsparticles-preset-confetti";
+import { InputComponent } from './input/input.component';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ImageComponent, CommonModule, MatButtonModule, MatIconModule, MatDividerModule],
+  imports: [RouterOutlet, ImageComponent, CommonModule, MatButtonModule, MatIconModule, MatDividerModule, InputComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

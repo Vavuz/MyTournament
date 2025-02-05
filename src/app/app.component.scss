@@ -1,3 +1,5 @@
+/* General */
+
 html, body {
     height: 100%;
     width: 100%;
@@ -10,6 +12,8 @@ body {
     flex-direction: column;
 }
 
+/* Header */
+
 h1 {
     text-align: center;
     padding-top: 2rem;
@@ -20,6 +24,8 @@ h1 {
     }
 }
 
+/* Middle general */
+
 .content {
     flex: 1;
     display: flex;
@@ -27,6 +33,8 @@ h1 {
     justify-content: center;
     align-items: center;
 }
+
+/* Home page */
 
 .home {
     padding-top: 20rem;
@@ -52,6 +60,8 @@ h1 {
     }
 }
 
+/* Tournament page */
+
 .challenge {
     padding-top: 5rem;
     display: flex;
@@ -61,6 +71,8 @@ h1 {
     align-items: center;
     gap: 20rem;
 }
+
+/* Footer */
 
 .footer {
     width: 100%;
