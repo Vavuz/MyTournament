@@ -24,8 +24,8 @@ export class AppComponent implements AfterViewInit {
   shoot = true;
   quantity: number = 16;
   category: string = "";
-  leftImageUrl = "https://i.natgeofe.com/n/4cebbf38-5df4-4ed0-864a-4ebeb64d33a4/NationalGeographic_1468962_3x4.jpg";
-  rightImageUrl = "https://i.natgeofe.com/n/4f5aaece-3300-41a4-b2a8-ed2708a0a27c/domestic-dog_thumb_square.jpg";
+  leftImageUrl = "";
+  rightImageUrl = "";
   listOfImages: any[] = [];
 
   constructor(@Inject(GeminiApiService) private geminiApiService: GeminiApiService, private pexelsApiService: PexelsApiService) {}
@@ -38,8 +38,6 @@ export class AppComponent implements AfterViewInit {
   
     this.spinningWheel();
     this.retrieveObjects(this.quantity, this.category);
-    this.gameStarted = true;
-    this.startLogic();
   }  
 
   goToHome() {
@@ -64,9 +62,16 @@ export class AppComponent implements AfterViewInit {
             name: item.name,
             imageUrl: ''
           }));
-  
+          
+          let imagesLoaded = 0;
+
           this.listOfImages.forEach(item => {
-            this.retrieveImages(item);
+            this.retrieveImages(item, () => {
+              imagesLoaded++;
+              if (imagesLoaded === this.listOfImages.length) {
+                this.startLogic();
+              }
+            });
           });
 
         } catch (error) {
@@ -79,24 +84,26 @@ export class AppComponent implements AfterViewInit {
     );
   }
 
-  retrieveImages(item: { name: string; imageUrl: string }) {
+  retrieveImages(item: { name: string; imageUrl: string }, callback: () => void) {
     this.pexelsApiService.getImageForItem(item.name).subscribe((imageUrl: string) => {
       if (imageUrl) {
-        console.log(`Image found for ${item.name}: ${imageUrl}`);
         item.imageUrl = imageUrl;
       } else {
-        console.warn(`No image found for ${item.name}`);
         item.imageUrl = "https://static.vecteezy.com/system/resources/thumbnails/008/695/917/small_2x/no-image-available-icon-simple-two-colors-template-for-no-image-or-picture-coming-soon-and-placeholder-illustration-isolated-on-white-background-vector.jpg";
       }
+      callback();
     });
   }  
   
   startLogic() {
+    this.gameStarted = true;
     this.loadImages();
     return;
   }
 
   loadImages() {
+    this.leftImageUrl = this.listOfImages[0].imageUrl;
+    this.rightImageUrl = this.listOfImages[1].imageUrl;
     this.shoot = true;
     return;
   }
