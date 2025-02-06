@@ -1,13 +1,14 @@
-import { Component, AfterViewInit } from '@angular/core';
+import { Component, AfterViewInit, Inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { ImageComponent } from './image/image.component';
+import { ImageComponent } from './components/image/image.component';
 import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
-import { tsParticles, Engine } from "tsparticles-engine";
+import { tsParticles } from "tsparticles-engine";
 import { loadConfettiPreset } from "tsparticles-preset-confetti";
-import { InputComponent } from './input/input.component';
+import { InputComponent } from './components/input/input.component';
+import { GeminiApiService } from './services/gemini-api.service';
 
 @Component({
   selector: 'app-root',
@@ -22,7 +23,28 @@ export class AppComponent implements AfterViewInit {
   shoot = true;
   leftImageUrl = "https://i.natgeofe.com/n/4cebbf38-5df4-4ed0-864a-4ebeb64d33a4/NationalGeographic_1468962_3x4.jpg";
   rightImageUrl = "https://i.natgeofe.com/n/4f5aaece-3300-41a4-b2a8-ed2708a0a27c/domestic-dog_thumb_square.jpg";
-  listOfImages: string[] = [];
+  listOfImages: any[] = [];
+
+  constructor(@Inject(GeminiApiService) private geminiApiService: GeminiApiService) {}
+
+  ngOnInit() {
+    this.geminiApiService.getItems("dogs").subscribe(
+      (response: any) => {
+        try {
+          const rawText = response.candidates[0].content.parts[0].text;
+          const cleanText = rawText.replace(/```json|```/g, '').trim();
+          this.listOfImages = JSON.parse(cleanText);
+  
+          console.log('Received list:', this.listOfImages);
+        } catch (error) {
+          console.error('Error parsing JSON:', error);
+        }
+      },
+      (error: any) => {
+        console.error('Error fetching list:', error);
+      }
+    );
+  }  
 
   startGame() {
     this.spinningWheel();
