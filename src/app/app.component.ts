@@ -10,17 +10,19 @@ import { loadConfettiPreset } from "tsparticles-preset-confetti";
 import { InputComponent } from './components/input/input.component';
 import { GeminiApiService } from './services/gemini-api/gemini-api.service';
 import { PexelsApiService } from './services/pexels-api/pexels-api.service';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ImageComponent, CommonModule, MatButtonModule, MatIconModule, MatDividerModule, InputComponent],
+  imports: [RouterOutlet, ImageComponent, CommonModule, MatButtonModule, MatIconModule, MatDividerModule, InputComponent, MatProgressSpinnerModule],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements AfterViewInit {
   title = 'MyTournament';
   gameStarted = false;
+  gameLoading = false;
   shoot = true;
   quantity: number = 16;
   category: string = "";
@@ -36,18 +38,14 @@ export class AppComponent implements AfterViewInit {
       return;
     }
   
-    this.spinningWheel();
+    this.gameLoading = true;
     this.retrieveObjects(this.quantity, this.category);
   }  
 
   goToHome() {
-    this.spinningWheel();
     this.gameStarted = false;
+    this.gameLoading = false;
     this.listOfImages = [];
-  }
-
-  spinningWheel() {
-    return;
   }
 
   retrieveObjects(quantity: number, item: string) {
@@ -69,6 +67,7 @@ export class AppComponent implements AfterViewInit {
             this.retrieveImages(item, () => {
               imagesLoaded++;
               if (imagesLoaded === this.listOfImages.length) {
+                this.gameLoading = false;
                 this.startLogic();
               }
             });

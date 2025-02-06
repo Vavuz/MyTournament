@@ -5,12 +5,13 @@
 
 <!-- Content -->
 <div class="content">
-  <div class="home" *ngIf="!gameStarted">
+  <div class="home" *ngIf="!gameStarted && !gameLoading">
     <p>Welcome to MyTournament! Type in the contenders' category and press Play!</p>
     <app-input (categorySelected)="onCategorySelected($event)"></app-input>
     <button mat-flat-button color="primary" (click)="startGame()">Play</button>
   </div>
-  <div class="challenge" *ngIf="gameStarted">
+  <mat-spinner *ngIf="!gameStarted && gameLoading"></mat-spinner>
+  <div class="challenge" *ngIf="gameStarted && !gameLoading">
     <app-image [imageUrl]="leftImageUrl" (click)="shootConfetti($event)"></app-image>
     <app-image [imageUrl]="rightImageUrl" (click)="shootConfetti($event)"></app-image>    
   </div>
