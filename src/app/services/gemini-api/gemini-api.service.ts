@@ -6,8 +6,8 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class GeminiApiService {
-  private apiKey = '';
-  private apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+  private API_KEY = '';
+  private BASE_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
 
   constructor(private http: HttpClient) {}
 
@@ -16,6 +16,6 @@ export class GeminiApiService {
       contents: [{ parts: [{ text: `Send me a JSON list of the ${quantity} most popular ${item}.` }] }]
     };
 
-    return this.http.post(`${this.apiUrl}?key=${this.apiKey}`, requestBody);
+    return this.http.post(`${this.BASE_URL}?key=${this.API_KEY}`, requestBody);
   }
 }

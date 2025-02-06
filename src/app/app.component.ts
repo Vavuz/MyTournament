@@ -8,7 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { tsParticles } from "tsparticles-engine";
 import { loadConfettiPreset } from "tsparticles-preset-confetti";
 import { InputComponent } from './components/input/input.component';
-import { GeminiApiService } from './services/gemini-api.service';
+import { GeminiApiService } from './services/gemini-api/gemini-api.service';
+import { PexelsApiService } from './services/pexels-api/pexels-api.service';
 
 @Component({
   selector: 'app-root',
@@ -27,7 +28,7 @@ export class AppComponent implements AfterViewInit {
   rightImageUrl = "https://i.natgeofe.com/n/4f5aaece-3300-41a4-b2a8-ed2708a0a27c/domestic-dog_thumb_square.jpg";
   listOfImages: any[] = [];
 
-  constructor(@Inject(GeminiApiService) private geminiApiService: GeminiApiService) {}
+  constructor(@Inject(GeminiApiService) private geminiApiService: GeminiApiService, private pexelsApiService: PexelsApiService) {}
 
   startGame() {
     if (!this.category.trim()) {
@@ -37,7 +38,6 @@ export class AppComponent implements AfterViewInit {
   
     this.spinningWheel();
     this.retrieveObjects(this.quantity, this.category);
-    this.retrieveImages();
     this.gameStarted = true;
     this.startLogic();
   }  
@@ -58,7 +58,17 @@ export class AppComponent implements AfterViewInit {
         try {
           const rawText = response.candidates[0].content.parts[0].text;
           const cleanText = rawText.replace(/```json|```/g, '').trim();
-          this.listOfImages = JSON.parse(cleanText);
+          const parsedList = JSON.parse(cleanText);
+          
+          this.listOfImages = parsedList.map((item: any) => ({
+            name: item.name,
+            imageUrl: ''
+          }));
+  
+          this.listOfImages.forEach(item => {
+            this.retrieveImages(item);
+          });
+
         } catch (error) {
           console.error("Error parsing JSON:", error);
         }
@@ -69,10 +79,18 @@ export class AppComponent implements AfterViewInit {
     );
   }
 
-  retrieveImages() {
-    return;
-  }
-
+  retrieveImages(item: { name: string; imageUrl: string }) {
+    this.pexelsApiService.getImageForItem(item.name).subscribe((imageUrl: string) => {
+      if (imageUrl) {
+        console.log(`Image found for ${item.name}: ${imageUrl}`);
+        item.imageUrl = imageUrl;
+      } else {
+        console.warn(`No image found for ${item.name}`);
+        item.imageUrl = "https://static.vecteezy.com/system/resources/thumbnails/008/695/917/small_2x/no-image-available-icon-simple-two-colors-template-for-no-image-or-picture-coming-soon-and-placeholder-illustration-isolated-on-white-background-vector.jpg";
+      }
+    });
+  }  
+  
   startLogic() {
     this.loadImages();
     return;
