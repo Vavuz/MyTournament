@@ -7,7 +7,7 @@
 <div class="content">
   <div class="home" *ngIf="!gameStarted">
     <p>Welcome to MyTournament! Type in the contenders' category and press Play!</p>
-    <app-input></app-input>
+    <app-input (categorySelected)="onCategorySelected($event)"></app-input>
     <button mat-flat-button color="primary" (click)="startGame()">Play</button>
   </div>
   <div class="challenge" *ngIf="gameStarted">

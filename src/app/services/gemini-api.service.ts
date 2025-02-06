@@ -11,9 +11,9 @@ export class GeminiApiService {
 
   constructor(private http: HttpClient) {}
 
-  getItems(item: string): Observable<any> {
+  getItems(quantity: number, item: string): Observable<any> {
     const requestBody = {
-      contents: [{ parts: [{ text: `Send me a JSON list of the ten most popular ${item}.` }] }]
+      contents: [{ parts: [{ text: `Send me a JSON list of the ${quantity} most popular ${item}.` }] }]
     };
 
     return this.http.post(`${this.apiUrl}?key=${this.apiKey}`, requestBody);
