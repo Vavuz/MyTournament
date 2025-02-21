@@ -12,8 +12,8 @@
   </div>
   <mat-spinner *ngIf="!gameStarted && gameLoading"></mat-spinner>
   <div class="challenge" *ngIf="gameStarted && !gameLoading">
-    <app-image [imageUrl]="leftImageUrl" (click)="shootConfetti($event)"></app-image>
-    <app-image [imageUrl]="rightImageUrl" (click)="shootConfetti($event)"></app-image>    
+    <app-image [imageUrl]="leftImageUrl" [imageName]="leftImageName" (click)="shootConfetti($event)"></app-image>
+    <app-image [imageUrl]="rightImageUrl" [imageName]="rightImageName" (click)="shootConfetti($event)"></app-image>    
   </div>
 </div>
 

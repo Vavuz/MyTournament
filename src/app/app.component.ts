@@ -9,7 +9,7 @@ import { tsParticles } from "tsparticles-engine";
 import { loadConfettiPreset } from "tsparticles-preset-confetti";
 import { InputComponent } from './components/input/input.component';
 import { GeminiApiService } from './services/gemini-api/gemini-api.service';
-import { PexelsApiService } from './services/pexels-api/pexels-api.service';
+import { ImageApiService } from './services/image-api/image-api.service';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @Component({
@@ -28,9 +28,11 @@ export class AppComponent implements AfterViewInit {
   category: string = "";
   leftImageUrl = "";
   rightImageUrl = "";
+  leftImageName = "";
+  rightImageName = "";
   listOfImages: any[] = [];
 
-  constructor(@Inject(GeminiApiService) private geminiApiService: GeminiApiService, private pexelsApiService: PexelsApiService) {}
+  constructor(@Inject(GeminiApiService) private geminiApiService: GeminiApiService, private imageApiService: ImageApiService) {}
 
   startGame() {
     if (!this.category.trim()) {
@@ -84,15 +86,14 @@ export class AppComponent implements AfterViewInit {
   }
 
   retrieveImages(item: { name: string; imageUrl: string }, callback: () => void) {
-    this.pexelsApiService.getImageForItem(item.name).subscribe((imageUrl: string) => {
+    this.imageApiService.getImageForItem(item.name).subscribe((imageUrl: string) => {
       if (imageUrl) {
         item.imageUrl = imageUrl;
-      } else {
-        item.imageUrl = "https://static.vecteezy.com/system/resources/thumbnails/008/695/917/small_2x/no-image-available-icon-simple-two-colors-template-for-no-image-or-picture-coming-soon-and-placeholder-illustration-isolated-on-white-background-vector.jpg";
+        console.log(imageUrl);
       }
       callback();
     });
-  }  
+  }
   
   startLogic() {
     this.gameStarted = true;
@@ -102,7 +103,9 @@ export class AppComponent implements AfterViewInit {
 
   loadImages() {
     this.leftImageUrl = this.listOfImages[0].imageUrl;
+    this.leftImageName = this.listOfImages[0].name;
     this.rightImageUrl = this.listOfImages[1].imageUrl;
+    this.rightImageName = this.listOfImages[1].name;
     this.shoot = true;
     return;
   }

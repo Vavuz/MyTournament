@@ -1,13 +1,12 @@
 import { TestBed } from '@angular/core/testing';
+import { ImageApiService } from './image-api.service';
 
-import { PexelsApiService } from './pexels-api.service';
-
-describe('PexelsApiService', () => {
-  let service: PexelsApiService;
+describe('ImageApiService', () => {
+  let service: ImageApiService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(PexelsApiService);
+    service = TestBed.inject(ImageApiService);
   });
 
   it('should be created', () => {

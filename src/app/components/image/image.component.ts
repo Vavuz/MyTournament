@@ -9,4 +9,5 @@ import { Component, Input } from '@angular/core';
 })
 export class ImageComponent {
   @Input() imageUrl = '';
+  @Input() imageName = '';
 }
