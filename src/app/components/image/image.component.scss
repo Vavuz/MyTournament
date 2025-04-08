@@ -1,5 +1,6 @@
 img {
-    width: 25rem;
+    max-width: 35rem;
+    max-height: 30rem;
     border-radius: 5%;
     border: 5px solid black;
     transition: transform 0.3s ease-in-out, border-color 0.3s ease-in-out;
