@@ -24,7 +24,7 @@ export class AppComponent implements AfterViewInit {
   gameStarted = false;
   gameLoading = false;
   shoot = true;
-  quantity: number = 16;
+  quantity: number = 2;
   category: string = "";
   leftImageUrl = "";
   rightImageUrl = "";
@@ -55,16 +55,17 @@ export class AppComponent implements AfterViewInit {
       (response: any) => {
         try {
           const rawText = response.candidates[0].content.parts[0].text;
-          const cleanText = rawText.replace(/```json|```/g, '').trim();
+          const match = rawText.match(/\[.*\]/s);
+          const cleanText = match[0];
           const parsedList = JSON.parse(cleanText);
-          
+  
           this.listOfImages = parsedList.map((item: any) => ({
             name: item.name,
             imageUrl: ''
           }));
-          
+  
           let imagesLoaded = 0;
-
+  
           this.listOfImages.forEach(item => {
             this.retrieveImages(item, () => {
               imagesLoaded++;
@@ -74,7 +75,7 @@ export class AppComponent implements AfterViewInit {
               }
             });
           });
-
+  
         } catch (error) {
           console.error("Error parsing JSON:", error);
         }
@@ -83,7 +84,7 @@ export class AppComponent implements AfterViewInit {
         console.error("Error fetching list:", error);
       }
     );
-  }
+  }  
 
   retrieveImages(item: { name: string; imageUrl: string }, callback: () => void) {
     this.imageApiService.getImageForItem(item.name).subscribe((imageUrl: string) => {

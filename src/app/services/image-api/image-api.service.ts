@@ -7,18 +7,15 @@ import { map } from 'rxjs/operators';
   providedIn: 'root'
 })
 export class ImageApiService {
-  private WIKIMEDIA_API_URL = 'https://en.wikipedia.org/w/api.php';
+  private PROXY_URL = 'https://mytournamentbackend.onrender.com/api/image';
 
   constructor(private http: HttpClient) {}
 
   getImageForItem(itemName: string): Observable<string> {
-    const url = `${this.WIKIMEDIA_API_URL}?action=query&prop=pageimages&format=json&pithumbsize=500&titles=${encodeURIComponent(itemName)}&origin=*`;
-
+    const url = `${this.PROXY_URL}?q=${encodeURIComponent(itemName)}`;
     return this.http.get<any>(url).pipe(
       map(response => {
-        const pages = response?.query?.pages || {};
-        const firstPage = Object.values(pages)[0] as any;
-        return firstPage?.thumbnail?.source || "https://upload.wikimedia.org/wikipedia/commons/a/ac/No_image_available.svg";
+        return response.link || "https://demofree.sirv.com/nope-not-here.jpg";
       })
     );
   }
