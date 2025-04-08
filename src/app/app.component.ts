@@ -90,7 +90,6 @@ export class AppComponent implements AfterViewInit {
     this.imageApiService.getImageForItem(item.name).subscribe((imageUrl: string) => {
       if (imageUrl) {
         item.imageUrl = imageUrl;
-        console.log(imageUrl);
       }
       callback();
     });

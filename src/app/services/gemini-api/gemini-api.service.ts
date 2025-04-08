@@ -11,7 +11,7 @@ export class GeminiApiService {
   constructor(private http: HttpClient) {}
 
   getItems(quantity: number, item: string): Observable<any> {
-    const prompt = `Send me a JSON list of ${quantity} of the most popular ${item}.`;
+    const prompt = `Send me a JSON list of the ${quantity} most popular ${item}.`;
     const requestBody = {
       model: "gemini-2.0-flash",
       contents: prompt
