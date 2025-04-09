@@ -1,5 +1,5 @@
 <!-- Header -->
-<h1 (click)="goToHome()">My Tournament</h1>
+<h1 (click)="goToHome()"><b>MyTournament</b></h1>
 
 <div id="tsparticles"></div>
 
@@ -11,9 +11,12 @@
     <button mat-flat-button color="primary" (click)="startGame()">Play</button>
   </div>
   <mat-spinner *ngIf="!gameStarted && gameLoading"></mat-spinner>
-  <div class="challenge" *ngIf="gameStarted && !gameLoading">
-    <app-image [imageUrl]="leftImageUrl" [imageName]="leftImageName" (click)="shootConfetti($event)"></app-image>
-    <app-image [imageUrl]="rightImageUrl" [imageName]="rightImageName" (click)="shootConfetti($event)"></app-image>    
+  <div class="challenge" *ngIf="gameStarted && !gameLoading && !gameEnded">
+    <app-image [imageUrl]="leftImageUrl" [imageName]="leftImageName" (click)="winnerSelected(leftImageName);shootConfetti($event)"></app-image>
+    <app-image [imageUrl]="rightImageUrl" [imageName]="rightImageName" (click)="winnerSelected(rightImageName);shootConfetti($event)"></app-image>
+  </div>
+  <div class="podium" *ngIf="gameEnded">
+    <app-image [imageUrl]="winnerImageUrl" [imageName]="winnerImageName"></app-image>
   </div>
 </div>
 

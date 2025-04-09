@@ -23,14 +23,19 @@ export class AppComponent implements AfterViewInit {
   title = 'MyTournament';
   gameStarted = false;
   gameLoading = false;
+  gameEnded = false;
   shoot = true;
-  quantity: number = 2;
+  quantity: number = 16;
   category: string = "";
-  leftImageUrl = "";
-  rightImageUrl = "";
-  leftImageName = "";
-  rightImageName = "";
+  leftImageUrl: string = "";
+  rightImageUrl: string = "";
+  leftImageName: string = "";
+  rightImageName: string = "";
+  winnerImageUrl: string = "";
+  winnerImageName: string = "";
   listOfImages: any[] = [];
+  imagesToKeep: any[] = [];
+  currentRound: number = 1;
 
   constructor(@Inject(GeminiApiService) private geminiApiService: GeminiApiService, private imageApiService: ImageApiService) {}
 
@@ -44,10 +49,25 @@ export class AppComponent implements AfterViewInit {
     this.retrieveObjects(this.quantity, this.category);
   }  
 
+  async ngAfterViewInit() {
+    await loadConfettiPreset(tsParticles);
+  }
+
   goToHome() {
     this.gameStarted = false;
     this.gameLoading = false;
+    this.gameEnded = false;
+    this.shoot = true;
+    this.category = "";
+    this.leftImageUrl = "";
+    this.rightImageUrl = "";
+    this.leftImageName = "";
+    this.rightImageName = "";
+    this.winnerImageUrl = "";
+    this.winnerImageName = "";
     this.listOfImages = [];
+    this.imagesToKeep = [];
+    this.currentRound = 1;
   }
 
   retrieveObjects(quantity: number, item: string) {
@@ -98,20 +118,54 @@ export class AppComponent implements AfterViewInit {
   startLogic() {
     this.gameStarted = true;
     this.loadImages();
-    return;
   }
 
   loadImages() {
+    this.shoot = true;
     this.leftImageUrl = this.listOfImages[0].imageUrl;
     this.leftImageName = this.listOfImages[0].name;
     this.rightImageUrl = this.listOfImages[1].imageUrl;
     this.rightImageName = this.listOfImages[1].name;
-    this.shoot = true;
-    return;
   }
 
-  async ngAfterViewInit() {
-    await loadConfettiPreset(tsParticles);
+  winnerSelected(imageName: string) {
+    const matchWinner = this.leftImageName === imageName ? this.listOfImages[0] : this.listOfImages[1];
+    this.imagesToKeep.push(matchWinner);
+
+    this.listOfImages.splice(0, 2);
+
+    if (this.changeMatchAndRound()) {
+      this.loadImages();
+    }
+    else {
+      this.gameEnded = true;
+      this.endGame(matchWinner);
+    }
+  }
+
+  changeMatchAndRound(): boolean {
+    if (this.listOfImages.length > 0) {
+      return true;
+    }
+    if (this.listOfImages.length == 0 && this.currentRound !== 4){
+      this.currentRound += 1;
+      this.listOfImages = this.imagesToKeep;
+      this.imagesToKeep = [];
+      return true;
+    }
+
+    return false;
+  }
+
+  nextRound() {
+    this.currentRound += 1;
+    this.listOfImages = this.listOfImages.filter((item, index) => this.imagesToKeep.includes(index));
+    this.imagesToKeep = [];
+  }
+
+  endGame(winner: { name: string; imageUrl: string }) {
+    this.winnerImageUrl = winner.imageUrl;
+    this.winnerImageName = winner.name;
   }
 
   shootConfetti(event: MouseEvent) {
