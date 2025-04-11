@@ -21,9 +21,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class AppComponent implements AfterViewInit {
   title = 'MyTournament';
+  roundName = "";
   gameStarted = false;
   gameLoading = false;
   gameEnded = false;
+  noTokens = false;
   shoot = true;
   quantity: number = 16;
   category: string = "";
@@ -54,9 +56,11 @@ export class AppComponent implements AfterViewInit {
   }
 
   goToHome() {
+    this.roundName = "";
     this.gameStarted = false;
     this.gameLoading = false;
     this.gameEnded = false;
+    this.noTokens = false;
     this.shoot = true;
     this.category = "";
     this.leftImageUrl = "";
@@ -102,25 +106,62 @@ export class AppComponent implements AfterViewInit {
       },
       (error: any) => {
         console.error("Error fetching list:", error);
+        this.gameLoading = false;
+        this.noTokens = true;
       }
     );
   }  
 
   retrieveImages(item: { name: string; imageUrl: string }, callback: () => void) {
-    this.imageApiService.getImageForItem(item.name).subscribe((imageUrl: string) => {
-      if (imageUrl) {
-        item.imageUrl = imageUrl;
+    this.imageApiService.getImageForItem(item.name).subscribe(
+      (imageUrl: string) => {
+        if (imageUrl) {
+          item.imageUrl = imageUrl;
+        }
+        callback();
+      },
+      err => {
+        if (err.status === 429) {
+          this.gameLoading = false;
+          this.noTokens = true;
+        }
+        callback();
       }
-      callback();
-    });
-  }
+    );
+  }  
   
   startLogic() {
     this.gameStarted = true;
     this.loadImages();
   }
 
+  roundNameChange() {
+    switch (this.currentRound) {
+      case (1): {
+        this.roundName = "Round 1";
+        break;
+      }
+      case (2): {
+        this.roundName = "Round 2";
+        break;
+      }
+      case (3): {
+        this.roundName = "Round 3";
+        break;
+      }
+      case (4): {
+        this.roundName = "Final round!";
+        break;
+      }
+      case (5): {
+        this.roundName = "Winner!";
+        break;
+      }
+    }
+  }
+
   loadImages() {
+    this.roundNameChange()
     this.shoot = true;
     this.leftImageUrl = this.listOfImages[0].imageUrl;
     this.leftImageName = this.listOfImages[0].name;
@@ -128,12 +169,14 @@ export class AppComponent implements AfterViewInit {
     this.rightImageName = this.listOfImages[1].name;
   }
 
-  winnerSelected(imageName: string) {
+  async winnerSelected(imageName: string) {
     const matchWinner = this.leftImageName === imageName ? this.listOfImages[0] : this.listOfImages[1];
     this.imagesToKeep.push(matchWinner);
 
     this.listOfImages.splice(0, 2);
 
+    await new Promise(f => setTimeout(f, 800));
+    
     if (this.changeMatchAndRound()) {
       this.loadImages();
     }
@@ -164,6 +207,8 @@ export class AppComponent implements AfterViewInit {
   }
 
   endGame(winner: { name: string; imageUrl: string }) {
+    this.currentRound += 1;
+    this.roundNameChange()
     this.winnerImageUrl = winner.imageUrl;
     this.winnerImageName = winner.name;
   }
@@ -196,7 +241,9 @@ export class AppComponent implements AfterViewInit {
           }
         }
       });
+    }
 
+    if (this.currentRound != 4){
       this.shoot = false;
     }
   }
