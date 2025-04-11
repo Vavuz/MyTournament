@@ -5,19 +5,21 @@
 
 <!-- Content -->
 <div class="content">
-  <div class="home" *ngIf="!gameStarted && !gameLoading">
+  <div class="home" *ngIf="!gameStarted && !gameLoading && !noTokens">
     <p>Welcome to MyTournament! Type in the contenders' category and press Play!</p>
     <app-input (categorySelected)="onCategorySelected($event)"></app-input>
     <button mat-flat-button color="primary" (click)="startGame()">Play</button>
   </div>
   <mat-spinner *ngIf="!gameStarted && gameLoading"></mat-spinner>
-  <div class="challenge" *ngIf="gameStarted && !gameLoading && !gameEnded">
+  <h2 *ngIf="gameStarted && !gameLoading && !gameEnded && !noTokens">{{roundName}}</h2>
+  <div class="challenge" *ngIf="gameStarted && !gameLoading && !gameEnded && !noTokens">
     <app-image [imageUrl]="leftImageUrl" [imageName]="leftImageName" (click)="winnerSelected(leftImageName);shootConfetti($event)"></app-image>
     <app-image [imageUrl]="rightImageUrl" [imageName]="rightImageName" (click)="winnerSelected(rightImageName);shootConfetti($event)"></app-image>
   </div>
   <div class="podium" *ngIf="gameEnded">
     <app-image [imageUrl]="winnerImageUrl" [imageName]="winnerImageName"></app-image>
   </div>
+  <p class="unavailable" *ngIf="noTokens">No more tokens available! Try again later</p>
 </div>
 
 <!-- Footer -->
@@ -29,7 +31,7 @@
   <div class="footer-links">
       <a href="https://static.vecteezy.com/system/resources/previews/022/613/027/non_2x/google-icon-logo-symbol-free-png.png">Photos provided by</a>
       <a href="https://static.vecteezy.com/system/resources/previews/022/613/027/non_2x/google-icon-logo-symbol-free-png.png">
-          <img src="https://static.vecteezy.com/system/resources/previews/022/613/027/non_2x/google-icon-logo-symbol-free-png.png" class="pexels"/>
+          <img src="https://static.vecteezy.com/system/resources/previews/022/613/027/non_2x/google-icon-logo-symbol-free-png.png" class="google"/>
       </a>
   </div>
 </div>

@@ -67,6 +67,15 @@ mat-spinner {
 
 /* Tournament page */
 
+h2 {
+    text-align: center;
+    font-size: 3rem;
+    padding-top: 3rem;
+    margin-bottom: 1rem;
+    color: white;
+    text-shadow: -2px -2px 0 #000, 2px -2px 0 #000, -2px 2px 0 #000, 2px 2px 0 #000;
+}
+
 .challenge {
     padding-top: 2.5rem;
     display: flex;
@@ -106,6 +115,8 @@ mat-spinner {
     gap: 8rem;
     background-color: rgba(0, 0, 0, 0.3);
     text-align: center;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
 }
 
 .footer-text {
@@ -131,8 +142,8 @@ mat-spinner {
     font-weight: 500;
 }
 
-.pexels {
+.google {
     margin-top: 1rem;
-    width: 7rem;
+    width: 3rem;
     padding-bottom: 0.8rem;
 }
