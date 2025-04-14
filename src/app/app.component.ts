@@ -243,7 +243,7 @@ export class AppComponent implements AfterViewInit {
       });
     }
 
-    if (this.currentRound != 4){
+    if (this.currentRound < 4){
       this.shoot = false;
     }
   }
